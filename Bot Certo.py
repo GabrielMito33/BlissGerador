@@ -15,9 +15,8 @@ import requests
 from telegram import Update, ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import (
     ApplicationBuilder, CommandHandler, MessageHandler, filters,
-    ContextTypes, ConversationHandler, JobQueue
+    ContextTypes, ConversationHandler
 )
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import re
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, CallbackContext
@@ -1804,12 +1803,10 @@ async def job_atualizar_historico(context: ContextTypes.DEFAULT_TYPE):
 async def main() -> None:
     # Habilitar o suporte para nested async loops
     nest_asyncio.apply()
-    scheduler = AsyncIOScheduler(timezone=pytz.timezone('America/Sao_Paulo'))
-    job_queue = JobQueue(scheduler=scheduler)
-    application = ApplicationBuilder().token(TOKEN).job_queue(job_queue).build()
+    application = ApplicationBuilder().token(TOKEN).build()
 
     # Definir conv_handler_corretor antes de usar
-    job_queue.run_repeating(job_atualizar_historico, interval=20, first=10)  
+    application.job_queue.run_repeating(job_atualizar_historico, interval=20, first=10)  
     conv_handler_corretor = ConversationHandler(
     entry_points=[CallbackQueryHandler(iniciar_corretor, pattern='^corrigir_listas$')],
     states={
