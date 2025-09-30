@@ -1,0 +1,7 @@
+requests==2.31.0
+pyTelegramBotAPI==4.14.0
+pwinput==1.0.3
+apscheduler==3.10.4
+tzlocal==4.3.1
+pytz==2023.3.post1
+python-telegram-bot==20.7
