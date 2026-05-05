@@ -1808,13 +1808,13 @@ async def main() -> None:
     # Definir conv_handler_corretor antes de usar
     application.job_queue.run_repeating(job_atualizar_historico, interval=20, first=10)  
     conv_handler_corretor = ConversationHandler(
-    entry_points=[CallbackQueryHandler(iniciar_corretor, pattern='^corrigir_listas$')],
+    entry_points=[CallbackQueryHandler(iniciar_corretor, pattern='^corrigir_listas$', per_message=True)],
     states={
         PERGUNTA_PLATAFORMA: [
             MessageHandler(filters.TEXT & ~filters.COMMAND, receber_plataforma),
         ],
         PERGUNTA_MARTINGALE: [
-            CallbackQueryHandler(receber_martingale),
+            CallbackQueryHandler(receber_martingale, per_message=True),
             MessageHandler(filters.TEXT & ~filters.COMMAND, receber_martingale),
         ],
         RECEBE_LISTA: [
@@ -1823,7 +1823,6 @@ async def main() -> None:
     },
     fallbacks=[CommandHandler("cancelar", cancelar)],
 )
-
 
     # Adicionar handlers de comandos e callbacks
     application.add_handler(CommandHandler('start', start))
